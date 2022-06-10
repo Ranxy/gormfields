@@ -36,14 +36,14 @@ import (
 
 
 func main(){
-	g := Generate{
+	g := generate.Generate{
 		OutPath:      "{{$head.OutPath}}",
 		PackageName:  "{{$head.PkgName}}",
 		UseZeroCheck: {{$head.UseZeroCheck}},
 	}
 
 	{{range $type := $head.Types}}
-	generate.Gen({{$type}}{})
+	g.Gen({{$type}}{})
 	{{end}}
 
 }
