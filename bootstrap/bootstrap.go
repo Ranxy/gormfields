@@ -61,7 +61,7 @@ func main(){
 		panic(err)
 	}
 
-	path := "./boot.go"
+	path := filepath.Join(".", g.PkgName+"boot.go")
 	f, err := os.Create(path)
 	if err != nil {
 		panic(err)
@@ -74,6 +74,18 @@ func main(){
 
 func (g *Generator) Run() error {
 	path := g.writeMain()
+
+	defer func() {
+		err := os.Remove(path)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	err := os.MkdirAll(g.OutPath, os.ModePerm)
+	if err != nil {
+		return err
+	}
 
 	execArgs := []string{"run"}
 	execArgs = append(execArgs, "-tags", g.BuildTags, filepath.Base(path))

@@ -106,7 +106,7 @@ func (i h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 	f.Close()
 }
 func buildTypeGormFileName(outPath string, structName string) string {
-	return filepath.Join(outPath, strings.ToLower(structName)+"_gormfields.go")
+	return filepath.Join(outPath, strings.ToLower(structName)+"_fields.go")
 }
 
 func (g *Generate) parserStruct(val interface{}) {

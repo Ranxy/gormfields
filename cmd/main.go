@@ -35,8 +35,33 @@ func generate(fname string) (err error) {
 
 	fmt.Println("PARSER VALUE ", p)
 
+	p.PkgName += "_fields"
+
 	var outPath string
 	outPath = filepath.Join(fname, p.PkgName)
+	tempPath := filepath.Join(fname, p.PkgName+"_temp")
+
+	err = os.Rename(outPath, tempPath)
+	if err != nil {
+		return err
+	}
+
+	var success bool
+
+	defer func() {
+		if success {
+			err := os.RemoveAll(tempPath)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			err = os.Rename(tempPath, outPath)
+			if err != nil {
+				panic(err)
+			}
+
+		}
+	}()
 
 	var trimmedBuildTags string
 	if *buildTags != "" {
@@ -61,6 +86,7 @@ func generate(fname string) (err error) {
 	if err := g.Run(); err != nil {
 		return fmt.Errorf("Bootstrap failed: %v", err)
 	}
+	success = true
 	return nil
 }
 func main() {
