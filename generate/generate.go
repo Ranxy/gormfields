@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
@@ -55,8 +56,8 @@ import (
 {{$head := .}}
 
 {{range .Param.Cols}}
-func {{ .Name }}({{ .Name }} {{ .Types}}, opts ...query.WithOpt) query.GormQueryReq {
-	res := h{{ .Name }}{
+func {{$head.Param.StructName}}{{ .Name }}({{ .Name }} {{ .Types}}, opts ...query.WithOpt) query.GormQueryReq {
+	res := h{{$head.Param.StructName}}{{ .Name }}{
 		{{ .Name }}: {{ .Name }},
 	}
 	for _, opt := range opts {
@@ -66,12 +67,12 @@ func {{ .Name }}({{ .Name }} {{ .Types}}, opts ...query.WithOpt) query.GormQuery
 
 }
 
-type h{{ .Name }} struct {
+type h{{$head.Param.StructName}}{{ .Name }} struct {
 	{{ .Name }}  {{ .Types}}
 	opt query.Opt
 }
 
-func (i h{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
+func (i h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 	{{if $head.UseZeroCheck}}
 	var zero {{ .Types}}
 	if i.opt.CheckZero.CheckZero() && i.{{ .Name }} == zero {
@@ -105,7 +106,7 @@ func (i h{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 	f.Close()
 }
 func buildTypeGormFileName(outPath string, structName string) string {
-	return outPath + strings.ToLower(structName) + "_gormfields.go"
+	return filepath.Join(outPath, strings.ToLower(structName)+"_gormfields.go")
 }
 
 func (g *Generate) parserStruct(val interface{}) {

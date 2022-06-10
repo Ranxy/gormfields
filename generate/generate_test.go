@@ -12,8 +12,9 @@ import (
 func TestGenerate(t *testing.T) {
 
 	g := Generate{
-		OutPath:      "./",
+		OutPath:      "./generate_fields",
 		UseZeroCheck: true,
+		PackageName:  "generate_fields",
 		Param: Param{
 			StructName: "TestP",
 			TableName:  "Testps",
@@ -32,10 +33,14 @@ func TestGenerate(t *testing.T) {
 			ImportMap: map[string]struct{}{},
 		},
 	}
+
 	t.Cleanup(func() {
-		err := os.Remove(buildTypeGormFileName(g.OutPath, g.Param.StructName))
+		err := os.RemoveAll(g.OutPath)
 		require.NoError(t, err)
 	})
+
+	err := os.Mkdir(g.OutPath, os.ModePerm)
+	require.NoError(t, err)
 
 	g.generateFromParam()
 }
@@ -92,14 +97,17 @@ func Test_parserStruct(t *testing.T) {
 
 func Test_generate(t *testing.T) {
 	g := Generate{
-		OutPath:      "./",
-		PackageName:  "generate",
+		OutPath:      "./generate_fields",
+		PackageName:  "generate_fields",
 		UseZeroCheck: true,
 	}
+
+	err := os.MkdirAll(g.OutPath, os.ModePerm)
+	require.NoError(t, err)
 	g.Gen(Testp{})
 
 	t.Cleanup(func() {
-		err := os.Remove(buildTypeGormFileName(g.OutPath, "Testp"))
+		err := os.RemoveAll(g.OutPath)
 		require.NoError(t, err)
 	})
 }

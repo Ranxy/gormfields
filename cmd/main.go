@@ -36,7 +36,7 @@ func generate(fname string) (err error) {
 	fmt.Println("PARSER VALUE ", p)
 
 	var outPath string
-	outPath = filepath.Join(fname, p.PkgName+"gormfields")
+	outPath = filepath.Join(fname, p.PkgName)
 
 	var trimmedBuildTags string
 	if *buildTags != "" {
