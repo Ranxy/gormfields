@@ -1,0 +1,64 @@
+package query
+
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
+
+func NewOperator[V TableModel]() Operator[V] {
+	return Operator[V]{}
+}
+
+type Operator[V TableModel] struct {
+}
+
+func (o Operator[V]) Insert(ctx context.Context, db *gorm.DB, val *V) error {
+	return db.Save(val).Error
+}
+
+func (o Operator[V]) Get(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) (*V, error) {
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+
+	res := new(V)
+
+	err := db.First(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+func (o Operator[V]) Find(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) ([]*V, error) {
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+
+	res := make([]*V, 0)
+
+	err := db.Find(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (d Operator[V]) Delete(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) error {
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+	return db.Delete(new(V)).Error
+}
+
+func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []GormQueryReq, updates ...UpdateParam) error {
+	updateReq := UpdateReq{}
+	for _, update := range updates {
+		update.DoUpdate(updateReq)
+	}
+
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+	return db.Updates(updateReq).Error
+}
