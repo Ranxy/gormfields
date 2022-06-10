@@ -12,3 +12,7 @@ type Role struct {
 	RoleInfo    string
 	ExpiredTime time.Time
 }
+
+func (r Role) TableName() string {
+	return "roles"
+}

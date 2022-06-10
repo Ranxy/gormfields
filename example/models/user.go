@@ -13,9 +13,17 @@ type User struct {
 	Status      StatusType
 }
 
-type UserRole struct {
+func (u User) TableName() string {
+	return "users"
+}
+
+type RelationUserRole struct {
 	gorm.Model
 	UserID   uint
 	RoleID   uint
 	RoleDesc string
+}
+
+func (r RelationUserRole) TableName() string {
+	return "user_roles"
 }
