@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"time"
 
 	"github.com/Ranxy/formfieldexample/models"
 	"github.com/Ranxy/formfieldexample/models/models_fields"
@@ -24,5 +25,16 @@ func (s *service) QueryUser(ctx context.Context) ([]*models.User, error) {
 		models_fields.UserUserName("foo", query.Or()),
 		query.Limit(10),
 		query.Offset(20),
+	)
+}
+func (s *service) UpdateUser(ctx context.Context) error {
+	db := s.db.WithContext(ctx)
+
+	// update users set updated_at = 'now-time',user_name='bar' where phone = 13412
+	return s.userOperator.Update(ctx,
+		db,
+		[]query.GormQueryReq{models_fields.UserPhone(13412)},
+		models_fields.UserUpdatedAt(time.Now()),
+		models_fields.UserUserName("bar"),
 	)
 }
