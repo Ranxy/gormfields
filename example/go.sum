@@ -1,5 +1,7 @@
 github.com/Ranxy/gormfields v0.0.0-20220613075550-3bf572f34180 h1:nhdAjxTKnUtW85DIoOFE/wsahAFkVLP8KOJAOO+D5S8=
 github.com/Ranxy/gormfields v0.0.0-20220613075550-3bf572f34180/go.mod h1:U3YRltouk8EsAg0Dz4P5DAgJp+6vyCdAovaSOWcEQDc=
+github.com/Ranxy/gormfields v0.0.0-20220613091747-51242b93b402 h1:CPN39XiNZ8iUv0VEZl22LDCvWwjAOFFcHQExZZ3X1to=
+github.com/Ranxy/gormfields v0.0.0-20220613091747-51242b93b402/go.mod h1:U3YRltouk8EsAg0Dz4P5DAgJp+6vyCdAovaSOWcEQDc=
 github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/jinzhu/now v1.1.4 h1:tHnRBy1i5F2Dh8BAFxqFzxKqqvezXrL2OW1TnX+Mlas=

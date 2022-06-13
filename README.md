@@ -22,4 +22,24 @@ s.userOperator.Find(ctx,
 		query.Offset(20),
 	)
 ```
+
+
+#### Examples of errors
+If we use a field from another table, we will get a compile error.
+```go
+s.userOperator.Find(ctx,
+		db,
+		models_fields.UserPhone(13412),
+		models_fields.RoleRoleInfo("foo", query.Or()),
+		query.Limit(10),
+		query.Offset(20),
+	)
+```
+We will got a compile error like this 
+```
+cannot use models_fields.RoleRoleInfo("foo", query.Or()) (value of type *models_fields.hRoleRoleInfo) as "github.com/Ranxy/gormfields/query".Field[models.User] value in argument to s.userOperator.Find: *models_fields.hRoleRoleInfo does not implement "github.com/Ranxy/gormfields/query".Field[models.User] (wrong type for method Table)
+		have Table() models.Role
+		want Table() models.User
+```
 Detailed examples can be found in the examples folder.
+
