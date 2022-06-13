@@ -17,7 +17,7 @@ func (o Operator[V]) Insert(ctx context.Context, db *gorm.DB, val *V) error {
 	return db.Save(val).Error
 }
 
-func (o Operator[V]) Get(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) (*V, error) {
+func (o Operator[V]) Get(ctx context.Context, db *gorm.DB, finds ...Field[V]) (*V, error) {
 	for _, f := range finds {
 		db = f.Do(db)
 	}
@@ -30,7 +30,7 @@ func (o Operator[V]) Get(ctx context.Context, db *gorm.DB, finds ...GormQueryReq
 	}
 	return res, nil
 }
-func (o Operator[V]) Find(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) ([]*V, error) {
+func (o Operator[V]) Find(ctx context.Context, db *gorm.DB, finds ...Field[V]) ([]*V, error) {
 	for _, f := range finds {
 		db = f.Do(db)
 	}
@@ -44,14 +44,14 @@ func (o Operator[V]) Find(ctx context.Context, db *gorm.DB, finds ...GormQueryRe
 	return res, nil
 }
 
-func (d Operator[V]) Delete(ctx context.Context, db *gorm.DB, finds ...GormQueryReq) error {
+func (d Operator[V]) Delete(ctx context.Context, db *gorm.DB, finds ...Field[V]) error {
 	for _, f := range finds {
 		db = f.Do(db)
 	}
 	return db.Delete(new(V)).Error
 }
 
-func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []GormQueryReq, updates ...UpdateParam) error {
+func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []Field[V], updates ...Field[V]) error {
 	updateReq := UpdateReq{}
 	for _, update := range updates {
 		update.DoUpdate(updateReq)

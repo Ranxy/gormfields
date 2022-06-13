@@ -30,6 +30,7 @@ type Param struct {
 var importList = []string{"github.com/Ranxy/gormfields/query", "gorm.io/gorm"}
 
 type Generate struct {
+	SelfPackage  string
 	PackageName  string
 	OutPath      string
 	UseZeroCheck bool
@@ -50,6 +51,7 @@ func (g *Generate) generateFromParam() {
 package {{ .PackageName}}
 	
 import (
+	. "{{.SelfPackage}}"
 	{{range $key, $val := .Param.ImportMap}}"{{$key}}"
 	{{end}}
 ) 
@@ -85,6 +87,12 @@ func (i *h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 func (i *h{{$head.Param.StructName}}{{ .Name }}) DoUpdate(req query.UpdateReq){
 	req["{{ .SqlName}}"] = i.{{ .Name }}
 }
+
+func (i *h{{$head.Param.StructName}}{{ .Name }}) Table(){{$head.Param.StructName}}{
+	return {{$head.Param.StructName}}{}
+}
+
+
 {{end}}
 
 	`

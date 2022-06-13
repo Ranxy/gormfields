@@ -23,8 +23,8 @@ func (s *service) QueryUser(ctx context.Context) ([]*models.User, error) {
 		db,
 		models_fields.UserPhone(13412),
 		models_fields.UserUserName("foo", query.Or()),
-		query.Limit(10),
-		query.Offset(20),
+		query.Limit[models.User](10),
+		query.Offset[models.User](20),
 	)
 }
 func (s *service) UpdateUser(ctx context.Context) error {

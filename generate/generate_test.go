@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Ranxy/gormfields/generate/example"
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 )
@@ -97,14 +98,15 @@ func Test_parserStruct(t *testing.T) {
 
 func Test_generate(t *testing.T) {
 	g := Generate{
-		OutPath:      "./generate_fields",
-		PackageName:  "generate_fields",
+		SelfPackage:  "github.com/Ranxy/gormfields/generate/example",
+		OutPath:      "./example/example_fields",
+		PackageName:  "example_fields",
 		UseZeroCheck: true,
 	}
 
 	err := os.MkdirAll(g.OutPath, os.ModePerm)
 	require.NoError(t, err)
-	g.Gen(Testp{})
+	g.Gen(example.User{})
 
 	t.Cleanup(func() {
 		err := os.RemoveAll(g.OutPath)

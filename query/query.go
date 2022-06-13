@@ -8,22 +8,67 @@ type GormQueryReq interface {
 	Do(db *gorm.DB) *gorm.DB
 }
 
-type OrderBy string
-
-func (i OrderBy) Do(db *gorm.DB) *gorm.DB {
-	return db.Order(i)
+func OrderBy[V TableModel](val string) orderBy[V] {
+	return orderBy[V]{
+		orderBy: val,
+	}
 }
 
-type Limit int
-
-func (i Limit) Do(db *gorm.DB) *gorm.DB {
-	return db.Limit(int(i))
+type orderBy[V TableModel] struct {
+	orderBy string
 }
 
-type Offset int
+func (i orderBy[V]) Do(db *gorm.DB) *gorm.DB {
+	return db.Order(i.orderBy)
+}
+func (i orderBy[V]) DoUpdate(UpdateReq) {
+	panic("orderby does not allow update")
+}
+func (i orderBy[V]) Table() V {
+	var res V
+	return res
+}
 
-func (i Offset) Do(db *gorm.DB) *gorm.DB {
-	return db.Offset(int(i))
+func Limit[V TableModel](val int) limit[V] {
+	return limit[V]{
+		limit: val,
+	}
+}
+
+type limit[V TableModel] struct {
+	limit int
+}
+
+func (i limit[V]) Do(db *gorm.DB) *gorm.DB {
+	return db.Limit(i.limit)
+}
+func (i limit[V]) DoUpdate(UpdateReq) {
+	panic("limit does not allow update")
+}
+func (i limit[V]) Table() V {
+	var res V
+	return res
+}
+
+func Offset[V TableModel](val int) offset[V] {
+	return offset[V]{
+		offset: val,
+	}
+}
+
+type offset[V TableModel] struct {
+	offset int
+}
+
+func (i offset[V]) Do(db *gorm.DB) *gorm.DB {
+	return db.Offset(i.offset)
+}
+func (i offset[V]) DoUpdate(UpdateReq) {
+	panic("offset does not allow update")
+}
+func (i offset[V]) Table() V {
+	var res V
+	return res
 }
 
 func CustomSql(or bool, sql string, args ...any) GormQueryReq {

@@ -37,6 +37,7 @@ import (
 
 func main(){
 	g := generate.Generate{
+		SelfPackage:  "{{$head.PkgPath}}",
 		OutPath:      "{{$head.OutPath}}",
 		PackageName:  "{{$head.PkgName}}",
 		UseZeroCheck: {{$head.UseZeroCheck}},
