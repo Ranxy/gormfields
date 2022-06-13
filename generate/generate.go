@@ -56,14 +56,14 @@ import (
 {{$head := .}}
 
 {{range .Param.Cols}}
-func {{$head.Param.StructName}}{{ .Name }}({{ .Name }} {{ .Types}}, opts ...query.WithOpt) query.GormQueryReq {
+func {{$head.Param.StructName}}{{ .Name }}({{ .Name }} {{ .Types}}, opts ...query.WithOpt) *h{{$head.Param.StructName}}{{ .Name }} {
 	res := h{{$head.Param.StructName}}{{ .Name }}{
 		{{ .Name }}: {{ .Name }},
 	}
 	for _, opt := range opts {
 		opt(&res.opt)
 	}
-	return res
+	return &res
 
 }
 
@@ -72,7 +72,7 @@ type h{{$head.Param.StructName}}{{ .Name }} struct {
 	opt query.Opt
 }
 
-func (i h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
+func (i *h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 	{{if $head.UseZeroCheck}}
 	var zero {{ .Types}}
 	if i.opt.CheckZero.CheckZero() && i.{{ .Name }} == zero {
@@ -80,6 +80,10 @@ func (i h{{$head.Param.StructName}}{{ .Name }}) Do(db *gorm.DB) *gorm.DB {
 	}
 	{{end}}
 	return i.opt.Or.Do(db)("{{ .SqlName}} = ?", i.{{ .Name }})
+}
+
+func (i *h{{$head.Param.StructName}}{{ .Name }}) DoUpdate(req query.UpdateReq){
+	req["{{ .SqlName}}"] = i.{{ .Name }}
 }
 {{end}}
 

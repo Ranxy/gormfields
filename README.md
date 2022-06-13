@@ -8,7 +8,7 @@ Simple and fast generation of strongly typed gorm parameters.
 Run `go install github.com/Ranxy/gormfields/gormfields@latest`
 
 #### Generate
-First, add "// gormfields:query" to the structure to be generated, or use `-all` in the next command to provide the structure to be generated
+First, add `// gormfields:query` to the structure to be generated, or use `-all` in the next command to provide the structure to be generated
 
 Then, use the command `gormfields [--all] [path-to-model]`,as in the example, using `gormfields -all . /example/models`.
 
