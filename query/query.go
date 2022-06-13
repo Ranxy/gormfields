@@ -4,10 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type GormQueryReq interface {
-	Do(db *gorm.DB) *gorm.DB
-}
-
 func OrderBy[V TableModel](val string) orderBy[V] {
 	return orderBy[V]{
 		orderBy: val,
@@ -71,22 +67,30 @@ func (i offset[V]) Table() V {
 	return res
 }
 
-func CustomSql(or bool, sql string, args ...any) GormQueryReq {
-	return &customSql{
+func CustomQuery[V TableModel](or bool, sql string, args ...any) Field[V] {
+	return &customSql[V]{
 		Sql:  sql,
 		Args: args,
 		or:   orCond(or),
 	}
 }
 
-type customSql struct {
+type customSql[V TableModel] struct {
 	Sql  string
 	or   orCond
 	Args []any
 }
 
-func (c *customSql) Do(db *gorm.DB) *gorm.DB {
+func (c *customSql[V]) Do(db *gorm.DB) *gorm.DB {
 	return c.or.Do(db)(c.Sql, c.Args...)
+}
+
+func (i customSql[V]) DoUpdate(UpdateReq) {
+	panic("customQuery does not allow update")
+}
+func (i customSql[V]) Table() V {
+	var res V
+	return res
 }
 
 type orCond bool
