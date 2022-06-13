@@ -41,27 +41,34 @@ func generate(fname string) (err error) {
 	outPath = filepath.Join(fname, p.PkgName)
 	tempPath := filepath.Join(fname, p.PkgName+"_temp")
 
-	err = os.Rename(outPath, tempPath)
+	var success bool
+
+	outExist, err := PathExist(outPath)
 	if err != nil {
 		return err
 	}
 
-	var success bool
-
-	defer func() {
-		if success {
-			err := os.RemoveAll(tempPath)
-			if err != nil {
-				panic(err)
-			}
-		} else {
-			err = os.Rename(tempPath, outPath)
-			if err != nil {
-				panic(err)
-			}
-
+	if outExist {
+		err = os.Rename(outPath, tempPath)
+		if err != nil {
+			return err
 		}
-	}()
+
+		defer func() {
+			if success {
+				err := os.RemoveAll(tempPath)
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				err = os.Rename(tempPath, outPath)
+				if err != nil {
+					panic(err)
+				}
+
+			}
+		}()
+	}
 
 	var trimmedBuildTags string
 	if *buildTags != "" {
@@ -112,4 +119,15 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+func PathExist(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
