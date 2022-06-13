@@ -14,7 +14,9 @@ Then, use the command `gormfields [--all] [path-to-model]`,as in the example, us
 
 #### example usage
 ```go
-s.userOperator.Find(ctx,
+var userOperator query.Operator[models.User]
+
+userOperator.Find(ctx,
 		db,
 		models_fields.UserPhone(13412),
 		models_fields.UserUserName("foo", query.Or()),
@@ -27,7 +29,7 @@ s.userOperator.Find(ctx,
 #### Examples of errors
 If we use a field from another table, we will get a compile error.
 ```go
-s.userOperator.Find(ctx,
+userOperator.Find(ctx,
 		db,
 		models_fields.UserPhone(13412),
 		models_fields.RoleRoleInfo("foo", query.Or()),
