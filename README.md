@@ -20,8 +20,8 @@ userOperator.Find(ctx,
 		db,
 		models_fields.UserPhone(13412),
 		models_fields.UserUserName("foo", query.Or()),
-		query.Limit(10),
-		query.Offset(20),
+		query.Limit[models.User](10),
+		query.Offset[models.User](20),
 	)
 ```
 
@@ -33,8 +33,8 @@ userOperator.Find(ctx,
 		db,
 		models_fields.UserPhone(13412),
 		models_fields.RoleRoleInfo("foo", query.Or()),
-		query.Limit(10),
-		query.Offset(20),
+		query.Limit[models.User](10),
+		query.Offset[models.User](20),
 	)
 ```
 We will got a compile error like this 
@@ -45,3 +45,9 @@ cannot use models_fields.RoleRoleInfo("foo", query.Or()) (value of type *models_
 ```
 Detailed examples can be found in the examples folder.
 
+#### Problem
+
+```
+query.Limit[models.User](10),
+```
+If we don't add `[models.User]` manually, go can't automatically infer the type here.
