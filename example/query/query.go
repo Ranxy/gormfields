@@ -33,7 +33,7 @@ func (s *service) UpdateUser(ctx context.Context) error {
 	// update users set updated_at = 'now-time',user_name='bar' where phone = 13412
 	return s.userOperator.Update(ctx,
 		db,
-		[]query.GormQueryReq{models_fields.UserPhone(13412)},
+		[]query.Field[models.User]{models_fields.UserPhone(13412)},
 		models_fields.UserUpdatedAt(time.Now()),
 		models_fields.UserUserName("bar"),
 	)
