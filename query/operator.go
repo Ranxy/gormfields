@@ -62,3 +62,15 @@ func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []Field[V], 
 	}
 	return db.Updates(updateReq).Error
 }
+
+func (d Operator[V]) Limit(l int) Field[V] {
+	return Limit[V](l)
+}
+
+func (d Operator[V]) Offset(o int) Field[V] {
+	return Offset[V](o)
+}
+
+func (d Operator[V]) OrderBy(ob string) Field[V] {
+	return OrderBy[V](ob)
+}
