@@ -62,7 +62,17 @@ func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []Field[V], 
 	}
 	return db.Updates(updateReq).Error
 }
-
+func (o Operator[V]) Count(ctx context.Context, db *gorm.DB, finds ...Field[V]) (int64, error) {
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+	var cnt int64
+	err := db.Model(new(V)).Count(&cnt).Error
+	if err != nil {
+		return 0, err
+	}
+	return cnt, nil
+}
 func (d Operator[V]) Limit(l int) Field[V] {
 	return Limit[V](l)
 }
