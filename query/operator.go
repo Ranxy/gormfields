@@ -44,6 +44,26 @@ func (o Operator[V]) Find(ctx context.Context, db *gorm.DB, finds ...Field[V]) (
 	return res, nil
 }
 
+func (o Operator[V]) FindAndCount(ctx context.Context, db *gorm.DB, finds ...Field[V]) ([]*V, int64, error) {
+	for _, f := range finds {
+		db = f.Do(db)
+	}
+
+	res := make([]*V, 0)
+
+	err := db.Find(&res).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var count int64 = 0
+	err = db.Limit(-1).Offset(-1).Count(&count).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return res, count, nil
+}
+
 func (d Operator[V]) Delete(ctx context.Context, db *gorm.DB, finds ...Field[V]) error {
 	for _, f := range finds {
 		db = f.Do(db)
@@ -83,4 +103,12 @@ func (d Operator[V]) Offset(o int) Field[V] {
 
 func (d Operator[V]) OrderBy(ob string) Field[V] {
 	return OrderBy[V](ob)
+}
+
+func (d Operator[V]) Projection(list ...string) Field[V] {
+	return Projection[V](list...)
+}
+
+func (d Operator[V]) CustomQuery(or bool, sql string, args ...any) Field[V] {
+	return CustomQuery[V](or, sql, args...)
 }

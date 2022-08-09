@@ -67,6 +67,27 @@ func (i offset[V]) Table() V {
 	return res
 }
 
+func Projection[V TableModel](list ...string) projection[V] {
+	return projection[V]{
+		list: list,
+	}
+}
+
+type projection[V TableModel] struct {
+	list []string
+}
+
+func (i projection[V]) Do(db *gorm.DB) *gorm.DB {
+	return db.Select(i.list)
+}
+func (i projection[V]) DoUpdate(UpdateReq) {
+	panic("select params does not allow update")
+}
+func (i projection[V]) Table() V {
+	var res V
+	return res
+}
+
 func CustomQuery[V TableModel](or bool, sql string, args ...any) Field[V] {
 	return &customSql[V]{
 		Sql:  sql,
