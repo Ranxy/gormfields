@@ -26,6 +26,9 @@ func (o Operator[V]) Get(ctx context.Context, db *gorm.DB, finds ...Field[V]) (*
 
 	err := db.First(&res).Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return res, nil
