@@ -83,7 +83,7 @@ func (d Operator[V]) Update(ctx context.Context, db *gorm.DB, finds []Field[V], 
 	for _, f := range finds {
 		db = f.Do(db)
 	}
-	return db.Updates(updateReq).Error
+	return db.Model(new(V)).Updates(updateReq).Error
 }
 func (o Operator[V]) Count(ctx context.Context, db *gorm.DB, finds ...Field[V]) (int64, error) {
 	for _, f := range finds {
