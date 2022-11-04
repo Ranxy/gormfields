@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 	"sync"
 	"text/template"
@@ -158,4 +159,7 @@ func (g *Generate) parserStruct(val interface{}) {
 		}
 
 	}
+	sort.Slice(g.Param.Cols, func(i, j int) bool {
+		return g.Param.Cols[i].Name < g.Param.Cols[j].Name
+	})
 }
